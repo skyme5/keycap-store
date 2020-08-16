@@ -1,14 +1,14 @@
 CC = g++
 CFLAGS = -static -std=c++14 -Wall -Wextra -Werror -Weffc++ -pedantic-errors -fpermissive
 
-main: main.cpp
-	$(CC) $(CFLAGS) $@.cpp -o $@
+build: main.cpp
+	$(CC) $(CFLAGS) $@.cpp -o dist/$@
 
-test: main
-	./main.exe
+run: main
+	dist/main.exe
 
 install:
-	cp main.exe nginx.exe
+	cp dist/main.exe nginx.exe
 
 clean:
 	$(RM) *.exe

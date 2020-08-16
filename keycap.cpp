@@ -18,12 +18,9 @@
  *
  */
 
-#define _WIN32_WINNT 0x0500
-
-#include "main.hpp"
+#include "keycap.hpp"
 
 #include <direct.h>
-#include <windows.h>
 
 #include <chrono>  // NOLINT [build/c++11]
 #include <cstdint>
@@ -34,11 +31,6 @@
 #include <map>
 #include <string>
 #include <vector>
-
-// #if  _WIN32_WINNT < 0x0500
-// #undef  _WIN32_WINNT
-// #define _WIN32_WINNT   0x0500
-// #endif
 
 std::ofstream logfile;
 

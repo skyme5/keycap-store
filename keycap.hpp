@@ -18,12 +18,26 @@
  *
  */
 
+#ifndef KEYCAP_HPP_
+#define KEYCAP_HPP_
+
+#include <windows.h>
+
 #include <cstdint>
 #include <map>
 #include <string>
 #include <vector>
 
-#include <windows.h>
+#if _WIN32_WINNT < 0x0500
+#undef _WIN32_WINNT
+#define _WIN32_WINNT 0x0500
+#endif
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+
+#pragma comment(lib, "user32.lib")
+
+#endif
 
 std::map<std::int16_t, std::vector<std::string>> vk() {
   std::map<std::int16_t, std::vector<std::string>> k;
@@ -34,146 +48,146 @@ std::map<std::int16_t, std::vector<std::string>> vk() {
   std::vector<std::string> k8(2, " backspace");
   std::vector<std::string> k9(2, " tab");
 
-  k[VK_LBUTTON] = k1; // 0x01
-  k[VK_RBUTTON] = k2; // 0x02
-  k[VK_MBUTTON] = k4; // 0x04
-  k[VK_BACK] = k8;    // 0x08
-  k[VK_TAB] = k9;     // 0x09
+  k[VK_LBUTTON] = k1;  // 0x01
+  k[VK_RBUTTON] = k2;  // 0x02
+  k[VK_MBUTTON] = k4;  // 0x04
+  k[VK_BACK] = k8;     // 0x08
+  k[VK_TAB] = k9;      // 0x09
 
   std::vector<std::string> k12;
   k12.push_back(" clear");
   k12.push_back(" CLEAR");
-  k[VK_CLEAR] = k12; // 0x0c
+  k[VK_CLEAR] = k12;  // 0x0c
 
   std::vector<std::string> k13;
   k13.push_back(" enter");
   k13.push_back(" ENTER");
-  k[VK_RETURN] = k13; // 0x0d
+  k[VK_RETURN] = k13;  // 0x0d
 
   std::vector<std::string> k16;
   k16.push_back(" shift");
   k16.push_back(" SHIFT");
-  k[VK_SHIFT] = k16; // 0x10
+  k[VK_SHIFT] = k16;  // 0x10
 
   std::vector<std::string> k17;
   k17.push_back(" ctrl");
   k17.push_back(" CTRL");
-  k[VK_CONTROL] = k17; // 0x11
+  k[VK_CONTROL] = k17;  // 0x11
 
   std::vector<std::string> k18;
   k18.push_back(" alt");
   k18.push_back(" ALT");
-  k[VK_MENU] = k18; // 0x12
+  k[VK_MENU] = k18;  // 0x12
 
   std::vector<std::string> k19;
   k19.push_back(" pause");
   k19.push_back(" PAUSE");
-  k[VK_PAUSE] = k19; // 0x13
+  k[VK_PAUSE] = k19;  // 0x13
 
   std::vector<std::string> k20;
   k20.push_back(" caps");
   k20.push_back(" CAPS");
-  k[VK_CAPITAL] = k20; // 0x14
+  k[VK_CAPITAL] = k20;  // 0x14
 
   std::vector<std::string> k27;
   k27.push_back(" esc");
   k27.push_back(" ESC");
-  k[VK_ESCAPE] = k27; // 0x1B
+  k[VK_ESCAPE] = k27;  // 0x1B
 
   std::vector<std::string> k32;
   k32.push_back(" space");
   k32.push_back(" SPACE");
-  k[VK_SPACE] = k32; // 0x20
+  k[VK_SPACE] = k32;  // 0x20
 
   std::vector<std::string> k33;
   k33.push_back(" pageup");
   k33.push_back(" PAGEUP");
-  k[VK_PRIOR] = k33; // 0x21
+  k[VK_PRIOR] = k33;  // 0x21
 
   std::vector<std::string> k34;
   k34.push_back(" pagedown");
   k34.push_back(" PAGEDOWN");
-  k[VK_NEXT] = k34; // 0x22
+  k[VK_NEXT] = k34;  // 0x22
 
   std::vector<std::string> k35;
   k35.push_back(" end");
   k35.push_back(" END");
-  k[VK_END] = k35; // 0x23
+  k[VK_END] = k35;  // 0x23
 
   std::vector<std::string> k36;
   k36.push_back(" home");
   k36.push_back(" HOME");
-  k[VK_HOME] = k36; // 0x24
+  k[VK_HOME] = k36;  // 0x24
 
   std::vector<std::string> k37;
   k37.push_back(" leftarrow");
   k37.push_back(" LEFTARROW");
-  k[VK_LEFT] = k37; // 0x25
+  k[VK_LEFT] = k37;  // 0x25
 
   std::vector<std::string> k38;
   k38.push_back(" uparrow");
   k38.push_back(" UPARROW");
-  k[VK_UP] = k38; // 0x26
+  k[VK_UP] = k38;  // 0x26
 
   std::vector<std::string> k39;
   k39.push_back(" rightarrow");
   k39.push_back(" RIGHTARROW");
-  k[VK_RIGHT] = k39; // 0x27
+  k[VK_RIGHT] = k39;  // 0x27
 
   std::vector<std::string> k40;
   k40.push_back(" downarrow");
   k40.push_back(" DOWNARROW");
-  k[VK_DOWN] = k40; // 0x28
+  k[VK_DOWN] = k40;  // 0x28
 
   std::vector<std::string> k41;
   k41.push_back(" select");
   k41.push_back(" SELECT");
-  k[VK_SELECT] = k41; // 0x29
+  k[VK_SELECT] = k41;  // 0x29
 
   std::vector<std::string> k42;
   k42.push_back(" print");
   k42.push_back(" PRINT");
-  k[VK_PRINT] = k42; // 0x2a
+  k[VK_PRINT] = k42;  // 0x2a
 
   std::vector<std::string> k43;
   k43.push_back(" execute");
   k43.push_back(" EXECUTE");
-  k[VK_EXECUTE] = k43; // 0x2b
+  k[VK_EXECUTE] = k43;  // 0x2b
 
   std::vector<std::string> k44;
   k44.push_back(" printscreen");
   k44.push_back(" PRINTSCREEN");
-  k[VK_SNAPSHOT] = k44; // 0x2c
+  k[VK_SNAPSHOT] = k44;  // 0x2c
 
   std::vector<std::string> k45;
   k45.push_back(" insert");
   k45.push_back(" INSERT");
-  k[VK_INSERT] = k45; // 0x2d
+  k[VK_INSERT] = k45;  // 0x2d
 
   std::vector<std::string> k46;
   k46.push_back(" del");
   k46.push_back(" DEL");
-  k[VK_DELETE] = k46; // 0x2e
+  k[VK_DELETE] = k46;  // 0x2e
 
   std::vector<std::string> k47;
   k47.push_back(" help");
   k47.push_back(" HELP");
-  k[VK_HELP] = k47; // 0x2f
+  k[VK_HELP] = k47;  // 0x2f
 
   std::vector<std::string> k48;
   k48.push_back("0");
   k48.push_back(")");
-  k[48] = k48; // 0x30
+  k[48] = k48;  // 0x30
 
   std::vector<std::string> k49;
   k49.push_back("1");
   k49.push_back("!");
-  k[49] = k49; // 0x31
+  k[49] = k49;  // 0x31
 
   std::vector<std::string> k50;
   k50.push_back("2");
   k50.push_back("@");
-  k[50] = k50; // 0x32
+  k[50] = k50;  // 0x32
 
   std::vector<std::string> k51;
   k51.push_back("3");
@@ -208,12 +222,12 @@ std::map<std::int16_t, std::vector<std::string>> vk() {
   std::vector<std::string> k57;
   k57.push_back("9");
   k57.push_back("(");
-  k[57] = k57; // 0x39
+  k[57] = k57;  // 0x39
 
   std::vector<std::string> k65;
   k65.push_back("a");
   k65.push_back("A");
-  k[65] = k65; // 0x41
+  k[65] = k65;  // 0x41
 
   std::vector<std::string> k66;
   k66.push_back("b");
@@ -243,7 +257,7 @@ std::map<std::int16_t, std::vector<std::string>> vk() {
   std::vector<std::string> k71;
   k71.push_back("g");
   k71.push_back("G");
-  k[71] = k71; // 0x47
+  k[71] = k71;  // 0x47
 
   std::vector<std::string> k72;
   k72.push_back("h");
@@ -338,17 +352,17 @@ std::map<std::int16_t, std::vector<std::string>> vk() {
   std::vector<std::string> k90;
   k90.push_back("z");
   k90.push_back("Z");
-  k[0x5A] = k90; // 0x5A
+  k[0x5A] = k90;  // 0x5A
 
   std::vector<std::string> k91;
   k91.push_back(" lwin");
   k91.push_back(" LWIN");
-  k[0x5b] = k91; // 0x5b
+  k[0x5b] = k91;  // 0x5b
 
   std::vector<std::string> k92;
   k92.push_back(" rwin");
   k92.push_back(" RWIN");
-  k[0x5c] = k92; // 0x5c
+  k[0x5c] = k92;  // 0x5c
 
   // The numeric key pad
   std::vector<std::string> k96(2, "0");
@@ -388,47 +402,47 @@ std::map<std::int16_t, std::vector<std::string>> vk() {
   std::vector<std::string> k112;
   k112.push_back(" f1");
   k112.push_back(" F1");
-  k[VK_F1] = k112; // 0x70
+  k[VK_F1] = k112;  // 0x70
 
   std::vector<std::string> k113;
   k113.push_back(" f2");
   k113.push_back(" F2");
-  k[VK_F2] = k113; // 0x71
+  k[VK_F2] = k113;  // 0x71
 
   std::vector<std::string> k114;
   k114.push_back(" f3");
   k114.push_back(" F3");
-  k[VK_F3] = k114; // 0x72
+  k[VK_F3] = k114;  // 0x72
 
   std::vector<std::string> k115;
   k115.push_back(" f4");
   k115.push_back(" F4");
-  k[VK_F4] = k115; // 0x73
+  k[VK_F4] = k115;  // 0x73
 
   std::vector<std::string> k116;
   k116.push_back(" f5");
   k116.push_back(" F5");
-  k[VK_F5] = k116; // 0x74
+  k[VK_F5] = k116;  // 0x74
 
   std::vector<std::string> k117;
   k117.push_back(" f6");
   k117.push_back(" F6");
-  k[VK_F6] = k117; // 0x75
+  k[VK_F6] = k117;  // 0x75
 
   std::vector<std::string> k118;
   k118.push_back(" f7");
   k118.push_back(" F7");
-  k[VK_F7] = k118; // 0x76
+  k[VK_F7] = k118;  // 0x76
 
   std::vector<std::string> k119;
   k119.push_back(" f8");
   k119.push_back(" F8");
-  k[VK_F8] = k119; // 0x77
+  k[VK_F8] = k119;  // 0x77
 
   std::vector<std::string> k144;
   k144.push_back(" numlock");
   k144.push_back(" NUMLOCK");
-  k[VK_NUMLOCK] = k144; // 0x90
+  k[VK_NUMLOCK] = k144;  // 0x90
 
   std::vector<std::string> k186;
   k186.push_back(";");
@@ -458,7 +472,7 @@ std::map<std::int16_t, std::vector<std::string>> vk() {
   std::vector<std::string> k191;
   k191.push_back("/");
   k191.push_back("?");
-  k[VK_OEM_2] = k191; // 0xBF
+  k[VK_OEM_2] = k191;  // 0xBF
 
   std::vector<std::string> k192;
   k192.push_back("`");
@@ -483,7 +497,9 @@ std::map<std::int16_t, std::vector<std::string>> vk() {
   std::vector<std::string> k222;
   k222.push_back("'");
   k222.push_back("\"");
-  k[VK_OEM_7] = k222; // 0xDE
+  k[VK_OEM_7] = k222;  // 0xDE
 
   return k;
 }
+
+#endif  // KEYCAP_HPP_
