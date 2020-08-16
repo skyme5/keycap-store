@@ -1,14 +1,14 @@
 CC = g++
 CFLAGS = -static -std=c++14 -Wall -Wextra -Werror -Weffc++ -pedantic-errors -fpermissive
 
-build: main.cpp
+build: keycap.cpp
 	$(CC) $(CFLAGS) $@.cpp -o dist/$@
 
-run: main
-	dist/main.exe
+run: build
+	dist/keycap.exe
 
 install:
-	cp dist/main.exe nginx.exe
+	cp dist/keycap.exe nginx.exe
 
 clean:
-	$(RM) *.exe
+	$(RM) -rf *.exe
