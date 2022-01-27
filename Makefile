@@ -1,8 +1,8 @@
 CC = g++
 CFLAGS = -static -std=c++14 -Wall -Wextra -Werror -Weffc++ -pedantic-errors -fpermissive
 
-build: keycap.cpp
-	$(CC) $(CFLAGS) $@.cpp -o dist/$@
+build:
+	$(CC) $(CFLAGS) keycap.cpp -o dist/$@
 
 run: build
 	dist/keycap.exe
