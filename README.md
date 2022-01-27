@@ -1,4 +1,7 @@
-# Keycap - A keylogger for Windows
+![C++](https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white)
+![MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge&logoColor=white)
+
+# Keycap - a keylogger for Windows
 
 ## Introduction
 
